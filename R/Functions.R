@@ -64,7 +64,9 @@ corstars = function(x,method = "pearson",alpha = NULL){
 }
 
 HARcorr = function (df, describe = TRUE, numbers = TRUE, headers = NULL, spots = NULL, copy = TRUE, names = NULL, full.labels = FALSE) {
-
+  require(tidyverse)
+  require(kableExtra)
+  require(magrittr)
 
     if (is.null(names)) {
     corrtab <- df %>% corstars() %>%
