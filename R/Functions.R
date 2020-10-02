@@ -163,6 +163,11 @@ formatps = function(p) {
   }
   return("<.001***")
 }
+formatest = function(est,p,digits = 2){
+  stars = codeps(p)
+  est = numformat(est,digits)
+  return(paste0(est,stars))
+}
 cv_bake = function (data, new, ingred.list) {
   new <- enquo(new)
   data %>% rowwise() %>% mutate(`:=`(!!quo_name(new), mean(c(!!!ingred.list),
