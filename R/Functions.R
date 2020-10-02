@@ -19,7 +19,7 @@ require(magrittr)
 
 r2tof2 = function(r2){f2 = r2/(1-r2);return(f2)}
 write.clip = function(data){clip <- pipe("pbcopy", "w");write.table(data, file=clip, sep = '\t', row.names = FALSE,quote = F);close(clip)}
-corstars <- function(x,method = "pearson",alpha = NULL){
+corstars = function(x,method = "pearson",alpha = NULL){
   require(Hmisc)
   require(dplyr)
   numformat <- function(val) { sub("^(-?)0.", "\\1.", sprintf("%.2f", val)) }
