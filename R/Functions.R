@@ -67,6 +67,7 @@ HARcorr = function (df, describe = TRUE, numbers = TRUE, headers = NULL, spots =
   require(tidyverse)
   require(kableExtra)
   require(magrittr)
+  require(clnR2)
 
     if (is.null(names)) {
     corrtab <- df %>% corstars() %>%
