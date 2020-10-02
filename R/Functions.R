@@ -19,15 +19,15 @@ require(magrittr)
 
 r2tof2 = function(r2){f2 = r2/(1-r2);return(f2)}
 write.clip = function(data){clip <- pipe("pbcopy", "w");write.table(data, file=clip, sep = '\t', row.names = FALSE,quote = F);close(clip)}
-HARcorr = function (df, vars, describe = TRUE, numbers = TRUE, headers = NULL, spots = NULL, copy = FALSE, names = NULL, full.labels = FALSE) {
+HARcorr = function (df, describe = TRUE, numbers = TRUE, headers = NULL, spots = NULL, copy = TRUE, names = NULL, full.labels = FALSE) {
 
 
     if (is.null(names)) {
-    corrtab <- df %>% select(!!!vars) %>% corstars() %>%
+    corrtab <- df %>% corstars() %>%
       rownames_to_column(., var = "var") %>% slice(-1)
   }
   else {
-    corrtab <- df %>% select(!!!vars) %>% corstars() %>%
+    corrtab <- df %>% corstars() %>%
       cbind.data.frame(var = names, .) %>% slice(-1)
   }
   corrtab %<>% tibble::add_row(var = names(corrtab)[2], .before = 1)
