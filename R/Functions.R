@@ -12,12 +12,15 @@
 #   Build and Reload Package:  'Cmd + Shift + B'
 #   Check Package:             'Cmd + Shift + E'
 #   Test Package:              'Cmd + Shift + T'
+require(tidyverse)
+require(kableExtra)
+require(magrittr)
+
 
 r2tof2 = function(r2){f2 = r2/(1-r2);return(f2)}
 write.clip = function(data){clip <- pipe("pbcopy", "w");write.table(data, file=clip, sep = '\t', row.names = FALSE,quote = F);close(clip)}
 HARcorr = function (df, vars, describe = TRUE, numbers = TRUE, headers = NULL, spots = NULL, copy = FALSE, names = NULL, full.labels = FALSE) {
-  require(kableExtra)
-  require(magrittr)
+
 
     if (is.null(names)) {
     corrtab <- df %>% select(!!!vars) %>% corstars() %>%
@@ -135,7 +138,6 @@ DiscVal = function(Reliability,LavMod){
   return(Result)
 }
 codeps = function(p,figure = F) {
-  require(tidyverse)
   if (figure == F){
     p = case_when(p < .001 ~ "***",
                   p < .01 ~ "**",
