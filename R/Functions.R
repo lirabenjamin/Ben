@@ -19,6 +19,50 @@ require(magrittr)
 
 r2tof2 = function(r2){f2 = r2/(1-r2);return(f2)}
 write.clip = function(data){clip <- pipe("pbcopy", "w");write.table(data, file=clip, sep = '\t', row.names = FALSE,quote = F);close(clip)}
+corstars <- function(x,method = "pearson",alpha = NULL){
+  require(Hmisc)
+  require(dplyr)
+  numformat <- function(val) { sub("^(-?)0.", "\\1.", sprintf("%.2f", val)) }
+
+  M = round(colMeans(x,na.rm=T),2)
+  SD = round(t(summarise_all(x, funs(sd),na.rm=T)),2)
+
+  x <- as.matrix(x)
+  R <- rcorr(x,type = method)$r
+  p <- rcorr(x, type = method)$P
+  rcorr(as.matrix(x))
+  ## define notions for significance levels; spacing is important.
+  mystars <- ifelse(p < .001, "***", ifelse(p < .01, "** ", ifelse(p < .05, "* ", " ")))
+
+  ## trunctuate the matrix that holds the correlations to two decimal
+  R <- numformat(R)
+  R = as.matrix(R,nrow=ncol(R))
+  ## build a new matrix that includes the correlations with their apropriate stars
+  Rnew <- matrix(paste(R, mystars, sep=""), ncol=ncol(x))
+  diag(Rnew) <- paste(diag(R), " ", sep="")
+  rownames(Rnew) <- colnames(x)
+  colnames(Rnew) <- paste(colnames(x), "", sep="")
+
+  ## remove upper triangle
+  Rnew <- as.matrix(Rnew)
+  Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
+  Rnew <- as.data.frame(Rnew)
+
+  ## remove last column and return the matrix (which is now a data frame)
+  Rnew <- cbind(Rnew[1:length(Rnew)-1])
+  Rnew
+
+  alpha = numformat(alpha)
+
+  if(length(alpha) == ncol(x)){
+    Rnew = cbind(M, SD, alpha , Rnew)
+    colnames(Rnew)[3] = "\u03B1"
+    return(Rnew)
+  }
+  else {Rnew = cbind(M, SD , Rnew)
+  return(Rnew)}
+}
+
 HARcorr = function (df, describe = TRUE, numbers = TRUE, headers = NULL, spots = NULL, copy = TRUE, names = NULL, full.labels = FALSE) {
 
 
