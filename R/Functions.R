@@ -221,8 +221,6 @@ cv_bake = function (data, new, ingred.list) {
   data %>% rowwise() %>% mutate(`:=`(!!quo_name(new), mean(c(!!!ingred.list),
                                                            na.rm = TRUE))) %>% ungroup()
 }
-
-
 generate_data = function(cors,n.obs,M=0,SD=1,names=NA){
   #Desired correlation matrix
   if(is.matrix(cors)){R = cors}
@@ -242,4 +240,23 @@ generate_data = function(cors,n.obs,M=0,SD=1,names=NA){
   raw = as.data.frame(newX)
   if(!is.na(names)){names(raw) = names}
   return(raw)
+}
+likertify = function(array,min,max,nitems,SD = .4){
+  items <- matrix(nrow = length(array), ncol = nitems)
+  for (x in 1:nrow(items)){
+    items[x, ] <- rnorm(n = nitems, mean = array[x], sd = SD)
+  }
+  items = round(items)
+
+  outranged = (items[items<min|items>max])
+  length(outranged)
+  percentout = (length(outranged))/(length(array)*nitems)
+
+  message(paste0(percentout*100),"% of the items were out of range")
+
+  items[items<min] = min
+  items[items>max] = max
+
+  items = as.data.frame(items)
+  return(items)
 }
