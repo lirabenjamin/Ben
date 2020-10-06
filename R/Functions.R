@@ -241,7 +241,7 @@ generate_data = function(cors,n.obs,M=0,SD=1,names=NA){
   if(!is.na(names)){names(raw) = names}
   return(raw)
 }
-likertify = function(array,min,max,nitems,SD = .4){
+likertify = function(array,min=1,max=7,nitems,SD = .4,prefix = "i"){
   items <- matrix(nrow = length(array), ncol = nitems)
   for (x in 1:nrow(items)){
     items[x, ] <- rnorm(n = nitems, mean = array[x], sd = SD)
@@ -258,5 +258,7 @@ likertify = function(array,min,max,nitems,SD = .4){
   items[items>max] = max
 
   items = as.data.frame(items)
+  names(items) = paste0(prefix,1:ncol(items))
   return(items)
 }
+
