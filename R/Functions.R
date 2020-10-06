@@ -170,7 +170,7 @@ No_Out = function(DataCompleta,Data,alpha = .999){
 DiscVal = function(Reliability,LavMod){
   #AVE = reliability(LavMod)
   AVE = Reliability
-  AVE = AVE %>% t   %>%  as.data.frame()%>% rownames_to_column() %>% rename(Variable=rowname) %>% select(Variable,avevar)
+  AVE = AVE %>% t   %>%  as.data.frame()%>% rownames_to_column("Variable")  %>% select(Variable,avevar)
   AVE = AVE %>% filter(Variable!="total")
   cor = lavInspect(LavMod,"cor.lv")
   Result = cbind(AVE,cor %>% as_tibble()) %>%
@@ -204,9 +204,9 @@ numformat = function(val, n = 2) {
   sub("^(-?)0.", "\\1.", sprintf(paste0("%.", n, "f"), val))
 }
 formatps = function(p) {
-  stars = codeps(p)
+  stars = codeps(p,n)
   if (p >= .001) {
-    pf = paste0(numformat(p, 3), stars)
+    pf = paste0(numformat(p, n), stars)
     return(pf)
   }
   return("<.001***")
