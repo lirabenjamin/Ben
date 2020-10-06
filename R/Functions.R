@@ -62,7 +62,6 @@ corstars = function(x,method = "pearson",alpha = NULL){
   else {Rnew = cbind(M, SD , Rnew)
   return(Rnew)}
 }
-
 HARcorr = function (df, describe = TRUE, numbers = TRUE, headers = NULL, spots = NULL, copy = TRUE, names = NULL, full.labels = FALSE) {
   require(tidyverse)
   require(kableExtra)
@@ -221,4 +220,26 @@ cv_bake = function (data, new, ingred.list) {
   new <- enquo(new)
   data %>% rowwise() %>% mutate(`:=`(!!quo_name(new), mean(c(!!!ingred.list),
                                                            na.rm = TRUE))) %>% ungroup()
+}
+
+
+generate_data = function(cors,n.obs,M=0,SD=1,names=NA){
+  #Desired correlation matrix
+  if(is.matrix(cors)){R = cors}
+  if(is.data.frame(cors)){R = as.matrix(cors)}
+  if(!is.matrix(cors)&!is.data.frame(cors)){(warning("cors must be a correlation matrix or data frame"))}
+
+  #Choleski decomposition
+  U = t(chol(R))
+  # Parameters for the fake dataset
+  nvars = dim(U)[1] # number of variables extracted from correlation matrix
+  #Generating random normal variables
+  random.normal = matrix(rnorm(nvars*n.obs,M,SD), nrow=nvars, ncol=n.obs);
+  #Matrix multiplication with the choleski decomposed correlation matrix yields correlated data
+  X = U %*% random.normal
+  #Needs transposing and cleaning
+  newX = t(X)
+  raw = as.data.frame(newX)
+  if(!is.na(names)){names(raw) = names}
+  return(raw)
 }
