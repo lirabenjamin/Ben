@@ -179,8 +179,23 @@ DiscVal = function(Reliability,LavMod){
            Dif = avevar-cor2,
            Valid = ifelse(Dif>0,T,F)) %>%
     select(Variable, var,avevar,cor,cor2,Dif,Valid) %>%
-    filter(Variable != var)
-  Result %>% select(Variable,var,Dif) %>% ggplot(aes(Variable,var,fill=Dif)) + geom_tile()+scale_fill_gradient2(low = "dark red",mid = "white",high = "dark green")+theme_void()
+    filter(Variable != var) %>%
+    mutate(Dif = as.numeric(Dif))
+
+  Result %>%
+    select(Variable, var, Dif,Valid) %>%
+    as_tibble() %>%
+    mutate(Dif = as.numeric(Dif)) %>%
+    ggplot(aes(Variable, var, fill = Dif)) +
+    geom_tile() +
+    geom_point(label = "X",shape=4,size = 5,data=. %>% filter(Valid)) +
+    scale_fill_gradient2(low = "dark red",
+                         mid = "white",
+                         high = "dark green") +
+    theme_minimal()+
+    theme(legend.position = "bottom")+
+    labs(y = "Variable",
+         fill = expression(AVE - r^2))
   return(Result)
 }
 codeps = function(p,figure = F) {
