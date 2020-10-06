@@ -93,7 +93,7 @@ corstars <- function(x){
 
   return(Rnew)
 }
-HARcorr = function (df, describe = TRUE, numbers = TRUE, headers = NULL, spots = NULL, copy = TRUE, names = NULL, full.labels = FALSE) {
+HARcor = function (df, describe = TRUE, numbers = TRUE, headers = NULL, spots = NULL, copy = TRUE, names = NULL, full.labels = FALSE) {
   require(tidyverse)
   require(kableExtra)
   require(magrittr)
