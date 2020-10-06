@@ -213,7 +213,7 @@ DiscVal = function(Reliability,LavMod){
     filter(Variable != var) %>%
     mutate(Dif = as.numeric(Dif))
 
-  Result %>%
+  p = Result %>%
     select(Variable, var, Dif,Valid) %>%
     as_tibble() %>%
     mutate(Dif = as.numeric(Dif)) %>%
@@ -227,7 +227,8 @@ DiscVal = function(Reliability,LavMod){
     theme(legend.position = "bottom")+
     labs(y = "Variable",
          fill = expression(AVE - r^2))
-  return(Result)
+  print(p)
+  return(list("Result" = Result, "Plot" = p))
 }
 codeps = function(p,figure = F) {
   if (figure == F){
