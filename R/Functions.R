@@ -117,7 +117,7 @@ HARcorr = function (df, describe = TRUE, numbers = TRUE, headers = NULL, spots =
   for (i in 1:nrow(corrtab)) {
     corrtab[i, -c(1)] %<>% str_replace("0.", ".")
   }
-  desc.output <- df %>% new.describe(vars)
+  desc.output <- df %>% new.describe()
   if (numbers == TRUE) {
     new.col.names <- c("var", 1:(ncol(corrtab) - 1))
     colnames(corrtab) <- new.col.names
