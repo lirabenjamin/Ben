@@ -73,7 +73,7 @@ corstars <- function(x){
   mystars <- ifelse(p < .001, "***",
                     ifelse(p < .01, "**",
                            ifelse(p < .05, "*", # significant
-                                  ifelse(p < 0.1, "???", " ")))) #marginal
+                                  ifelse(p < 0.1, "†", " ")))) #marginal
 
   ## trunctuate the matrix that holds the correlations to two decimal
   R <- format(round(cbind(rep(-1.11, ncol(x)), R), 2))[,-1]
