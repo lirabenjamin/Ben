@@ -16,6 +16,13 @@ require(tidyverse)
 require(kableExtra)
 require(magrittr)
 
+theme_ang = function(){
+  theme(legend.position = "bottom",
+        panel.grid = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(size = .25))
+}
 
 r2tof2 = function(r2){f2 = r2/(1-r2);return(f2)}
 write.clip = function(data){clip <- pipe("pbcopy", "w");write.table(data, file=clip, sep = '\t', row.names = FALSE,quote = F);close(clip)}
