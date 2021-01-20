@@ -257,8 +257,8 @@ codeps = function(p,figure = F) {
 numformat = function(val, n = 2) {
   sub("^(-?)0.", "\\1.", sprintf(paste0("%.", n, "f"), val))
 }
-formatps = function(p) {
-  stars = codeps(p,n)
+formatps = function(p,n=3) {
+  stars = codeps(p)
   if (p >= .001) {
     pf = paste0(numformat(p, n), stars)
     return(pf)
@@ -315,4 +315,6 @@ likertify = function(array,min=1,max=7,nitems,SD = .4,prefix = "i"){
   names(items) = paste0(prefix,1:ncol(items))
   return(items)
 }
+
+
 
