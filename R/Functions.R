@@ -316,5 +316,53 @@ likertify = function(array,min=1,max=7,nitems,SD = .4,prefix = "i"){
   return(items)
 }
 
+plotmed = function(Model,med=NULL){
+  data=Model %>% parameterestimates() %>% select(lhs,op,rhs,label,p = pvalue)%>% left_join(
+    m %>% standardizedSolution() %>% select(lhs,op,rhs,est.std)
+  ) %>%
+    filter(label != "")
+  data = data %>% mutate(est.std = Ben::formatest(est.std,p))
+
+  if(is.null(med)){
+    med = data %>% filter(label == "a") %>% pull(lhs)
+  }
+
+
+  a = data %>% filter(label == "a") %>% pull(est.std)
+  b = data %>% filter(label == "b") %>% pull(est.std)
+  c = data %>% filter(label == "c") %>% pull(est.std)
+  ie = data %>% filter(label == "ie") %>% pull(est.std)
+  te = data %>% filter(label == "te") %>% pull(est.std)
+
+  DiagrammeR::grViz(
+    paste0("digraph {
+    // Base Styling
+    nodesep='1';
+
+  'Preview' [shape = 'rectangle',fontname = 'Helvetica',width = 1.5]
+  '",med,"' [shape = 'rectangle',fontname = 'Helvetica'width = 1.5]
+  'Post-Test' [shape = 'rectangle',fontname = 'Helvetica'width = 1.5]
+  'Post-Test' [shape = 'rectangle',fontname = 'Helvetica'width = 1.5]
+
+  'Indirect Effect = ",ie,"'[shape = 'plaintext',fontname = 'Helvetica',fontsize  = 12]
+  'Total Effect = ",te,"'[shape = 'plaintext',fontname = 'Helvetica',fontsize  = 12]
+
+  'Indirect Effect = ",ie,"' -> 'Total Effect = ",te,"'[style = 'invis']
+
+  'Preview'->'",med,"' [style = 'solid', label = '",a,"',fontname = 'Helvetica',fontsize  = 12]
+  '",med,"'->'Post-Test' [style = 'solid', label = '",b,"',fontname = 'Helvetica',fontsize  = 12]
+  'Preview'->'Post-Test' [style = 'solid', label = '",c,"',fontname = 'Helvetica',fontsize  = 12]
+
+  Preview ->  'Indirect Effect = ",ie,"' [style = 'invis']
+
+           { rank = max; 'Indirect Effect = ",ie,"'; 'Total Effect = ",te,"' }
+           { rank = min; '",med,"' }
+           { rank = same; 'Preview'; 'Post-Test' }
+   }
+"))
+
+}
+
+
 
 
