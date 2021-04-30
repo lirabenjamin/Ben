@@ -16,6 +16,16 @@ require(tidyverse)
 require(kableExtra)
 require(magrittr)
 
+#Makes formated text with numbers into 2 decimals
+decimal.two = function(x){
+  p1 = (x %>% str_split("\\."))[[1]][1]
+  p2 = (x %>% str_split("\\."))[[1]][2]
+  num = as.numeric(str_extract_all(x, ".[0-9]+")[[1]])
+  str = str_extract_all(x,"[*†]") %>% unlist() %>% paste(collapse = "")
+  return(paste0(p1,Ben::numformat(num),str))
+
+}
+
 theme_ang = function(){
   theme(legend.position = "bottom",
         panel.grid = element_blank(),
