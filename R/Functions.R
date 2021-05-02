@@ -17,13 +17,13 @@ require(kableExtra)
 require(magrittr)
 
 #Makes formated text with numbers into 2 decimals
-decimal.two = function(x){
+decimal.two = function (x)
+{
   p1 = (x %>% str_split("\\."))[[1]][1]
   p2 = (x %>% str_split("\\."))[[1]][2]
   num = as.numeric(str_extract_all(x, ".[0-9]+")[[1]])
-  str = str_extract_all(x,"[*†]") %>% unlist() %>% paste(collapse = "")
-  return(paste0(p1,Ben::numformat(num),str))
-
+  str = str_extract_all(x, "[*†]") %>% unlist() %>% paste(collapse = "")
+  return(as.numeric(paste0(p1, Ben::numformat(num))))
 }
 
 theme_ang = function(){
