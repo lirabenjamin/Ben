@@ -26,6 +26,19 @@ decimal.two = function (x)
   return(as.numeric(paste0(p1, Ben::numformat(num))))
 }
 
+gt_apa = function(){tab_options(table_body.hlines.width = 0,
+                                  stub.border.width = "1px",
+                                  stub.border.color = "black",
+                                  column_labels.border.bottom.color = "black",
+                                  column_labels.border.top.color = "black",
+                                  column_labels.border.top.width = "1px",
+                                  column_labels.border.bottom.width = "1px",
+                                  table_body.border.bottom.color = "black",
+                                  table_body.border.bottom.width = "1px",
+                                  table_body.border.top.width = 0,
+                                  table.border.top.width = 0,
+                                  table.border.bottom.width =  0 )}
+
 theme_ang = function(){
   theme(legend.position = "bottom",
         panel.grid = element_blank(),
