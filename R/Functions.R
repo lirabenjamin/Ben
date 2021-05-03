@@ -26,7 +26,8 @@ decimal.two = function (x)
   return(as.numeric(paste0(p1, Ben::numformat(num))))
 }
 
-gt_apa = function(){tab_options(table_body.hlines.width = 0,
+gt_apa = function(x){x %>%
+    tab_options(table_body.hlines.width = 0,
                                   stub.border.width = "1px",
                                   stub.border.color = "black",
                                   column_labels.border.bottom.color = "black",
