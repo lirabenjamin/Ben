@@ -37,8 +37,18 @@ gt_apa = function(x){x %>%
                                   table_body.border.bottom.color = "black",
                                   table_body.border.bottom.width = "1px",
                                   table_body.border.top.width = 0,
-                                  table.border.top.width = 0,
-                                  table.border.bottom.width =  0 )}
+                data_row.padding = 0,
+                row_group.border.bottom.width = 0,
+                row_group.border.top.width = 0,
+                row_group.padding = 4,
+                table.border.top.width = 0,
+                                  table.border.bottom.width =  0) %>%
+    tab_options() %>%
+    tab_style(style = cell_text(style = "italic"),
+              locations = cells_row_groups())
+    }
+
+
 
 theme_ang = function(){
   theme(legend.position = "bottom",
