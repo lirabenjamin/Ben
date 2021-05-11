@@ -38,6 +38,7 @@ gt_apa = function(x){x %>%
                                   table_body.border.bottom.width = "1px",
                                   table_body.border.top.width = 0,
                 data_row.padding = 0,
+                table.font.names = "Times New Roman",
                 row_group.border.bottom.width = 0,
                 row_group.border.top.width = 0,
                 row_group.padding = 4,
