@@ -49,7 +49,25 @@ gt_apa = function(x){x %>%
               locations = cells_row_groups())
     }
 
+#Factor analysis
+fa_tibble = function(fa,sort=T){
+  fa$loadings %>% as.numeric() %>%
+    matrix(ncol = fa$factors) %>% as_tibble %>%
+    mutate(Var = fa$model %>% colnames()) %>%
+    select(Item = Var,everything())
 
+}
+
+gt_fatable = function(fa_tibble,cut = .3){
+  nf = ncol(fa_tibble)-1
+  fa_tibble %>%
+    # rename(F1 = V1, F2 = V2,F3 = V3) %>%
+    # mutate_if(is.numeric,Ben::numformat) %>%
+    gt() %>%
+    fmt_number(columns = 2:ncol(fa_tibble)) %>%
+    data_color(columns = 2:ncol(fa_tibble),apply_to = "text",colors = scales::col_bin(bins = c(-1,cut*-1,cut,1),palette = c("black","gray","black"),domain = NULL)) %>%
+    Ben::gt_apa()
+}
 
 theme_ang = function(){
   theme(legend.position = "bottom",
