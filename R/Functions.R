@@ -44,17 +44,23 @@ gt_apa = function(x){x %>%
                 row_group.padding = 4,
                 table.border.top.width = 0,
                                   table.border.bottom.width =  0) %>%
-    tab_options(table.font.color = "black") %>%
+    tab_options(table.font.color = "black",
+                table.font.size = 12) %>%
     tab_style(style = cell_text(style = "italic"),
               locations = cells_row_groups())
     }
 
+
+
 #Factor analysis
 fa_tibble = function(fa,sort=T){
-  fa$loadings %>% as.numeric() %>%
+  if(sort){fa = psych::fa.sort(fa)}
+  loadings = fa$loadings %>% as.numeric() %>%
     matrix(ncol = fa$factors) %>% as_tibble %>%
     mutate(Var = fa$model %>% colnames()) %>%
     select(Item = Var,everything())
+  return(loadings)
+
 
 }
 
@@ -63,13 +69,13 @@ gt_fatable = function(fa_tibble,cut = .3){
   fa_tibble %>%
     # rename(F1 = V1, F2 = V2,F3 = V3) %>%
     # mutate_if(is.numeric,Ben::numformat) %>%
-    gt() %>%
+    gt::gt() %>%
     Ben::gt_apa() %>%
-    fmt_number(columns = 2:ncol(fa_tibble)) %>%
-    data_color(columns = 2:ncol(fa_tibble),apply_to = "text",colors = scales::col_bin(bins = c(-1,cut*-1,cut,1),palette = c("black","gray","black"),domain = NULL))
+    gt::fmt_number(columns = 2:ncol(fa_tibble)) %>%
+    gt::data_color(columns = 2:ncol(fa_tibble),apply_to = "text",colors = scales::col_bin(bins = c(-1,cut*-1,cut,1),palette = c("black","gray","black"),domain = NULL))
 }
 
-psych::fa(mtcars,nfactors = 3) %>% fa_tibble() %>% gt_fatable()
+
 
 theme_ang = function(){
   theme(legend.position = "bottom",
