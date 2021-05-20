@@ -44,7 +44,7 @@ gt_apa = function(x){x %>%
                 row_group.padding = 4,
                 table.border.top.width = 0,
                                   table.border.bottom.width =  0) %>%
-    tab_options() %>%
+    tab_options(table.font.color = "black") %>%
     tab_style(style = cell_text(style = "italic"),
               locations = cells_row_groups())
     }
@@ -64,10 +64,12 @@ gt_fatable = function(fa_tibble,cut = .3){
     # rename(F1 = V1, F2 = V2,F3 = V3) %>%
     # mutate_if(is.numeric,Ben::numformat) %>%
     gt() %>%
+    Ben::gt_apa() %>%
     fmt_number(columns = 2:ncol(fa_tibble)) %>%
-    data_color(columns = 2:ncol(fa_tibble),apply_to = "text",colors = scales::col_bin(bins = c(-1,cut*-1,cut,1),palette = c("black","gray","black"),domain = NULL)) %>%
-    Ben::gt_apa()
+    data_color(columns = 2:ncol(fa_tibble),apply_to = "text",colors = scales::col_bin(bins = c(-1,cut*-1,cut,1),palette = c("black","gray","black"),domain = NULL))
 }
+
+psych::fa(mtcars,nfactors = 3) %>% fa_tibble() %>% gt_fatable()
 
 theme_ang = function(){
   theme(legend.position = "bottom",
