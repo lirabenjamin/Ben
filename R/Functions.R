@@ -64,15 +64,17 @@ fa_tibble = function(fa,sort=T){
 
 }
 
-gt_fatable = function(fa_tibble,cut = .3){
+gt_fatable = function(fa_tibble,cut = .3,apa = T){
   nf = ncol(fa_tibble)-1
-  fa_tibble %>%
+  gt = fa_tibble %>%
     # rename(F1 = V1, F2 = V2,F3 = V3) %>%
     # mutate_if(is.numeric,Ben::numformat) %>%
     gt::gt() %>%
-    Ben::gt_apa() %>%
     gt::fmt_number(columns = 2:ncol(fa_tibble)) %>%
     gt::data_color(columns = 2:ncol(fa_tibble),apply_to = "text",colors = scales::col_bin(bins = c(-1,cut*-1,cut,1),palette = c("black","gray","black"),domain = NULL))
+
+  if(apa){gt %>% Ben::gt_apa() %>% fmt(columns = 2:ncol(fa_tibble), fns = Ben::numformat) %>% return()}
+  else{return(gt)}
 }
 
 
