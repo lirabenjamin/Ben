@@ -156,7 +156,6 @@ fa_tibble = function(fa,sort=T){
 
 
 }
-
 gt_fatable = function(x,sort = T,cut = .3,apa = T,eigenvalues = T,cor = F) {
   if (is_tibble(x)) {
     items = nrow(x)
@@ -269,12 +268,6 @@ gt_fatable = function(x,sort = T,cut = .3,apa = T,eigenvalues = T,cor = F) {
     return(gt)
   }
 }
-
-x = psych::fa(mtcars,nfactors = 3,rotate = "oblimin")
-x
-x$Phi
-x  %>% gt_fatable(sort = T,cut = .1,apa = T,eigenvalues = T,cor = F)
-
 theme_ang = function(){
   theme(legend.position = "bottom",
         panel.grid = element_blank(),
