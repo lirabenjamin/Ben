@@ -16,6 +16,99 @@ require(tidyverse)
 require(kableExtra)
 require(magrittr)
 
+#Makes figure and table captions
+captionR = function (prefix = "Figure", auto_space = TRUE, levels = 1, type = NULL,
+                     infix = ".",out = "html")
+{
+  check_class(prefix, "character")
+  check_class(auto_space, "logical")
+  check_class(levels, "numeric")
+  check_class(infix, "character")
+  if (is.null(type)) {
+    type <- c(rep("n", times = levels))
+  }
+  else if (length(type) < levels) {
+    type[(length(type) + 1):levels] <- "n"
+  }
+  else if (length(type) > levels) {
+    type <- type[1:levels]
+  }
+  if (!all(type %in% c("n", "c", "C"))) {
+    stop("Invalid 'type' value used.  Expecting 'n', 'c', or 'C'.")
+  }
+  if (auto_space) {
+    prefix <- paste(prefix, " ")
+  }
+  force(levels)
+  force(prefix)
+  force(infix)
+  OBJECTS <- list(name = NULL, caption = NULL, number = list(list()))
+  OBJECTS$number[[1]][which(type == "n")] <- 1
+  OBJECTS$number[[1]][which(type == "c")] <- "a"
+  OBJECTS$number[[1]][which(type == "C")] <- "A"
+  function(name, caption = "", display = "full", level = FALSE,
+           cite = FALSE, num = FALSE, out = out) {
+    if (level > levels) {
+      stop("Level too large.")
+    }
+    objects <- OBJECTS
+    if (any(objects$name == name)) {
+      obj_ind <- match(name, objects$name)
+      if (objects$caption[obj_ind] == "") {
+        objects$caption[obj_ind] <- caption
+      }
+      else {
+        caption <- objects$caption[obj_ind]
+      }
+    }
+    else {
+      obj_ind <- length(objects$name) + 1
+      if (length(objects$number) == length(objects$name)) {
+        if (level) {
+          objects$number[[obj_ind]] <- increment(objects$number[[obj_ind -
+                                                                   1]], level)
+        }
+        else {
+          objects$number[[obj_ind]] <- increment(objects$number[[obj_ind -
+                                                                   1]], levels)
+        }
+      }
+      objects$name[obj_ind] <- name
+      objects$caption[obj_ind] <- caption
+    }
+    assign("OBJECTS", objects, envir = parent.env(environment()))
+    obj_num <- paste(objects$number[[obj_ind]], collapse = infix)
+    if (cite) {
+      .Deprecated(new = "display", old = "cite")
+      return(paste0(prefix, obj_num))
+    }
+    if (num) {
+      .Deprecated(new = "display", old = "num")
+      return(obj_num)
+    }
+    if (display == FALSE) {
+      return(invisible())
+    }
+    else if (display == "full" || display == "f" && out == "pdf") {
+      return(paste0("**",prefix, obj_num,"**", "\\newline", "\\textit{",caption,"}"))
+    }
+    else if (display == "full" || display == "f" && out == "html") {
+      return(paste0("**",prefix, obj_num,"**", "<br>", "*",caption,"*"))
+    }
+    else if (display == "cite" || display == "c") {
+      return(paste0("**",prefix, obj_num,"**"))
+    }
+    else if (display == "num" || display == "n") {
+      return(obj_num)
+    }
+    else {
+      warning("Invalid display mode used.  Caption was still saved.")
+      return(invisible())
+    }
+  }
+}
+
+
 #Makes formated text with numbers into 2 decimals
 decimal.two = function (x)
 {
@@ -27,7 +120,7 @@ decimal.two = function (x)
 }
 
 gt_apa = function(x){x %>%
-    tab_options(table_body.hlines.width = 0,
+    gt::tab_options(table_body.hlines.width = 0,
                                   stub.border.width = "1px",
                                   stub.border.color = "black",
                                   column_labels.border.bottom.color = "black",
@@ -44,9 +137,9 @@ gt_apa = function(x){x %>%
                 row_group.padding = 4,
                 table.border.top.width = 0,
                                   table.border.bottom.width =  0) %>%
-    tab_options(table.font.color = "black",
+    gt::tab_options(table.font.color = "black",
                 table.font.size = 12) %>%
-    tab_style(style = cell_text(style = "italic"),
+    gt::tab_style(style = cell_text(style = "italic"),
               locations = cells_row_groups())
     }
 
@@ -64,20 +157,123 @@ fa_tibble = function(fa,sort=T){
 
 }
 
-gt_fatable = function(fa_tibble,cut = .3,apa = T){
-  nf = ncol(fa_tibble)-1
-  gt = fa_tibble %>%
-    # rename(F1 = V1, F2 = V2,F3 = V3) %>%
-    # mutate_if(is.numeric,Ben::numformat) %>%
-    gt::gt() %>%
-    gt::fmt_number(columns = 2:ncol(fa_tibble)) %>%
-    gt::data_color(columns = 2:ncol(fa_tibble),apply_to = "text",colors = scales::col_bin(bins = c(-1,cut*-1,cut,1),palette = c("black","gray","black"),domain = NULL))
+gt_fatable = function(x,sort = T,cut = .3,apa = T,eigenvalues = T,cor = F) {
+  if (is_tibble(x)) {
+    items = nrow(x)
+    gt = x %>%
+      gt::gt() %>%
+      gt::fmt_number(columns = 2:ncol(x)) %>%
+      gt::data_color(
+        columns = 2:ncol(x),
+        apply_to = "text",
+        colors = scales::col_bin(
+          bins = c(-1, cut * -1, cut, 1),
+          palette = c("black", "gray", "black"),
+          domain = NULL
+        )
+      )
 
-  if(apa){gt %>% Ben::gt_apa() %>% fmt(columns = 2:ncol(fa_tibble), fns = Ben::numformat) %>% return()}
-  else{return(gt)}
+  } else {
+    fatib = x %>% Ben::fa_tibble(sort)
+    items = nrow(fatib)
+    ve = x$Vaccounted
+    ve= ve[2,]
+    ve = c("Variance Explained",ve,"Summary statistics")
+    eigen = x$e.values[1:ncol(fatib)-1]
+    eigen = c("Eigenvalues",eigen,"Summary statistics")
+
+    if(eigenvalues) {
+      fatib = fatib %>%
+        mutate(g = " ") %>%
+        rbind(eigen,ve) %>%
+        mutate_at(2:(x$factors+1),as.numeric) %>%
+        group_by(g)
+
+      gt = fatib %>%
+        gt::gt() %>%
+        gt::fmt_number(columns = 2:ncol(fatib),rows = 1:items) %>%
+        gt::data_color(
+          columns = 2:ncol(fatib),
+          apply_to = "text",
+          colors = scales::col_bin(
+            bins = c(-1, cut * -1, cut, 1),
+            palette = c("black", "gray", "black"),
+            domain = NULL
+          )) %>%
+        tab_style(style = cell_text(color = "black"),locations = cells_body(rows = (nrow(fatib)-1):nrow(fatib))) %>%
+        fmt_number(columns = 2:ncol(fatib),rows = items+1) %>%
+        fmt_percent(columns = 2:ncol(fatib),rows = items + 2,decimals = 1)
+    } else {gt  = gt(fatib)}
+
+    if(cor) {
+      cors = x$Phi
+      cors[upper.tri(cors,diag = T)] = NA
+      cors = cors %>% as.data.frame()
+      colnames(cors) = colnames(fatib)[2:(x$factors+1)]
+      cors = cors %>% rownames_to_column("Item") %>% mutate(g = "Correlations")
+      cors$Item = colnames(fatib)[2:(x$factors+1)]
+      fatib$g[1:items] = " "
+      fatib = rbind(fatib,cors) %>% group_by(g)
+
+      gt = fatib %>%
+        gt::gt() %>%
+        gt::fmt_number(columns = 2:(1+x$factors),rows = 1:items) %>%
+        gt::data_color(
+          columns = 2:ncol(fatib),
+          apply_to = "text",
+          colors = scales::col_bin(
+            bins = c(-1, cut * -1, cut, 1),
+            palette = c("black", "gray", "black"),
+            domain = NULL
+          )) %>%
+        tab_style(style = cell_text(color = "black"),locations = cells_body(rows = (items+1):nrow(fatib))) %>%
+        fmt_missing(columns = 1:ncol(fatib),missing_text = " ")
+      if(eigenvalues){
+        gt =  gt %>%
+          fmt_number(columns = 2:ncol(fatib),rows = items+1) %>%
+          fmt_percent(columns = 2:ncol(fatib),rows = items + 2,decimals = 1)
+      } else {
+        gt = gt %>%
+          fmt_number(columns = 2:ncol(fatib),rows = (nrow(fatib)+1-x$factors):nrow(fatib))
+      }
+
+
+
+    } else { gt  = gt::gt(fatib)}
+
+
+
+  }
+
+
+
+
+  if (apa) {
+    gt = gt %>% Ben::gt_apa() %>% gt::fmt(
+      columns = 2:ncol(fatib),
+      rows = 1:items,
+      fns = Ben::numformat
+    )
+    if (cor) {
+      gt = gt %>%
+        gt::fmt(
+          columns = 2:ncol(fatib),
+          rows = (nrow(fatib) - x$factors + 1):nrow(fatib),
+          fns = Ben::numformat
+        ) %>%
+        gt::fmt_missing(columns = 1:ncol(fatib),missing_text = "")
+    }
+    return(gt)
+  }
+  else{
+    return(gt)
+  }
 }
 
-
+x = psych::fa(mtcars,nfactors = 3,rotate = "oblimin")
+x
+x$Phi
+x  %>% gt_fatable(sort = T,cut = .1,apa = T,eigenvalues = T,cor = F)
 
 theme_ang = function(){
   theme(legend.position = "bottom",
