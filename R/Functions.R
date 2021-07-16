@@ -89,11 +89,11 @@ captionR = function (prefix = "Figure", auto_space = TRUE, levels = 1, type = NU
     if (display == FALSE) {
       return(invisible())
     }
-    else if (display == "full" || display == "f" && out == "pdf") {
+    else if (out == "pdf" && display == "full" || display == "f") {
       return(paste0("**",prefix, obj_num,"**", "\\newline", "\\textit{",caption,"}"))
     }
-    else if (display == "full" || display == "f" && out == "html") {
-      return(paste0("**",prefix, obj_num,"**", "<br>", "*",caption,"*"))
+    else if (out == "html" && display == "full" || display == "f") {
+      return(paste0("<caption>","**",prefix, obj_num,"**", "<br>", "*",caption,"*</caption>"))
     }
     else if (display == "cite" || display == "c") {
       return(paste0("**",prefix, obj_num,"**"))

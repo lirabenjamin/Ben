@@ -28,7 +28,7 @@ captionR = function (prefix = "Figure", auto_space = TRUE, levels = 1, type = NU
   OBJECTS$number[[1]][which(type == "c")] <- "a"
   OBJECTS$number[[1]][which(type == "C")] <- "A"
   function(name, caption = "", display = "full", level = FALSE,
-           cite = FALSE, num = FALSE, out = out) {
+           cite = FALSE, num = FALSE, out = "html") {
     if (level > levels) {
       stop("Level too large.")
     }
@@ -70,11 +70,11 @@ captionR = function (prefix = "Figure", auto_space = TRUE, levels = 1, type = NU
     if (display == FALSE) {
       return(invisible())
     }
-    else if (display == "full" || display == "f" && out == "pdf") {
+    else if (out == "pdf" && display == "full" || display == "f") {
       return(paste0("**",prefix, obj_num,"**", "\\newline", "\\textit{",caption,"}"))
     }
-    else if (display == "full" || display == "f" && out == "html") {
-      return(paste0("**",prefix, obj_num,"**", "<br>", "*",caption,"*"))
+    else if (out == "html" && display == "full" || display == "f") {
+      return(paste0("<caption>","**",prefix, obj_num,"**", "<br>", "*",caption,"*</caption>"))
     }
     else if (display == "cite" || display == "c") {
       return(paste0("**",prefix, obj_num,"**"))
@@ -91,5 +91,6 @@ captionR = function (prefix = "Figure", auto_space = TRUE, levels = 1, type = NU
 
 library(rmarkdown)
 library(checkmate)
-tcite = captionR()
-tcite(name = "test3",caption =  "This is my test caption")
+tcite = captionR(out = "html")
+tcite(name = "test3",caption =  "This is my test caption",out = "html")
+tcite(name = "test3",caption =  "This is my test caption",out = "pdf")
