@@ -93,7 +93,7 @@ captionR = function (prefix = "Figure", auto_space = TRUE, levels = 1, type = NU
       return(paste0("**",prefix, obj_num,"**", "\\newline", "\\textit{",caption,"}"))
     }
     else if (out == "html" && display == "full" || display == "f") {
-      return(paste0("**",prefix, obj_num,"**", "<br>", "*",caption,"*"))
+      return(paste0("<p class = 'caption'>**",prefix, obj_num,"**", "<br>", "*",caption,"*</p>"))
     }
     else if (display == "cite" || display == "c") {
       return(paste0("**",prefix, obj_num,"**"))
