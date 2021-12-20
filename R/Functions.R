@@ -270,7 +270,7 @@ gt_fatable = function(x,sort = T,cut = .3,apa = T,eigenvalues = T,cor = F) {
 }
 
 theme_ang = function(){
-  theme_gray()+
+  theme_gray() %+replace%
   theme(legend.position = "bottom",
         panel.grid = element_blank(),
         panel.border = element_blank(),
