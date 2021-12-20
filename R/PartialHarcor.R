@@ -38,4 +38,4 @@ partialHARcor = function(data,vars,control.vars){
 #               vars = c("GritPasScore","GritPersScore","varables you want to corrleate"),
 #               control.vars = c("Wonderlic","Other variaiibles you want to control for"))
 # 
-#devtools::install_github("lirabenjamin/Ben",force = T)
+devtools::install_github("lirabenjamin/Ben",force = T)
