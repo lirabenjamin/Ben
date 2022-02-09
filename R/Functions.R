@@ -269,15 +269,15 @@ gt_fatable = function(x,sort = T,cut = .3,apa = T,eigenvalues = T,cor = F) {
   }
 }
 
-theme_ang = function(){
-  ggplot2::theme_gray() %+replace%
-    ggplot2::theme(legend.position = "bottom",
-        panel.grid = element_blank(),
-        panel.border = element_blank(),
-        panel.background = element_blank(),
-        axis.line = element_line(size = .25)
-        )
-}
+# theme_ang = function(){
+#   ggplot2::theme_gray() %+replace%
+#     ggplot2::theme(legend.position = "bottom",
+#         panel.grid = element_blank(),
+#         panel.border = element_blank(),
+#         panel.background = element_blank(),
+#         axis.line = element_line(size = .25)
+#         )
+# }
 
 r2tof2 = function(r2){f2 = r2/(1-r2);return(f2)}
 write.clip = function(data){clip <- pipe("pbcopy", "w");write.table(data, file=clip, sep = '\t', row.names = FALSE,quote = F);close(clip)}
