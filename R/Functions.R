@@ -265,8 +265,6 @@ r2tof2 = function(r2){f2 = r2/(1-r2);return(f2)}
 write.clip = function(data){clip <- pipe("pbcopy", "w");write.table(data, file=clip, sep = '\t', row.names = FALSE,quote = F);close(clip)}
 
 new.describe <- function(df){
-
-
   descr.output <- df %>%
     psych::describe() %>%
     as.data.frame() %>%
@@ -341,7 +339,6 @@ HARcor = function (df, describe = TRUE, numbers = TRUE, headers = NULL, spots = 
   require(tidyverse)
   require(kableExtra)
   require(magrittr)
-  require(clnR2)
 
     if (is.null(names)) {
     corrtab <- df %>% corstars() %>%
