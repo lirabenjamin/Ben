@@ -20,6 +20,7 @@
 #' @export
 #'
 #' @examples
+#' mtcars |> create_composite(c(drat, gear), drat_gear_average)
 
 create_composite <-
   function(data,selection, name, na.rm = T) {
@@ -29,4 +30,4 @@ create_composite <-
       dplyr::ungroup()
   }
 
-mtcars |> create_composite(c(drat, gear), drat_gear_average)
+

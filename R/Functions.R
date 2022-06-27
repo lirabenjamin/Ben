@@ -591,6 +591,3 @@ plotmed = function(Model,med=NULL){
 "))
 }
 
-
-
-
