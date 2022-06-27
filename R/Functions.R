@@ -1,17 +1,3 @@
-# Hello, world!
-#
-# This is an example function named 'hello'
-# which prints 'Hello, world!'.
-#
-# You can learn more about package authoring with RStudio at:
-#
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Build and Reload Package:  'Cmd + Shift + B'
-#   Check Package:             'Cmd + Shift + E'
-#   Test Package:              'Cmd + Shift + T'
 require(tidyverse)
 require(kableExtra)
 require(magrittr)
@@ -142,8 +128,6 @@ gt_apa = function(x){x %>%
     gt::tab_style(style = cell_text(style = "italic"),
               locations = cells_row_groups())
     }
-
-
 
 #Factor analysis
 fa_tibble = function(fa,sort=T){
@@ -523,11 +507,6 @@ formatest = function(est,p,digits = 2){
   est = numformat(est,digits)
   return(paste0(est,stars))
 }
-cv_bake = function (data, new, ingred.list) {
-  new <- enquo(new)
-  data %>% rowwise() %>% mutate(`:=`(!!quo_name(new), mean(c(!!!ingred.list),
-                                                           na.rm = TRUE))) %>% ungroup()
-}
 generate_data = function(cors,n.obs,M=0,SD=1,names=NA){
   #Desired correlation matrix
   if(is.matrix(cors)){R = cors}
@@ -568,7 +547,6 @@ likertify = function(array,min=1,max=7,nitems,SD = .4,prefix = "i"){
   names(items) = paste0(prefix,1:ncol(items))
   return(items)
 }
-
 plotmed = function(Model,med=NULL){
   data=Model %>% parameterestimates() %>% select(lhs,op,rhs,label,p = pvalue)%>% left_join(
     Model %>% standardizedSolution() %>% select(lhs,op,rhs,est.std)
