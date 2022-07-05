@@ -14,7 +14,7 @@
 #' mutate(gear_f = factor(gear, labels = c("three", "four","five"))) |>
 #' rename_with_csv(csvfile,gear_f)
 
-recode_with_csv <- function(data, csvfile, old_column, new_column={{old_column}}){
+recode_with_csv <- function(data, csvfile=".recode", old_column, new_column={{old_column}}){
 
   names = readr::read_csv(csvfile,col_names = F,show_col_types = FALSE)
   result <- data |> dplyr::mutate({{new_column}} := {{old_column}})
