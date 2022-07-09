@@ -24,7 +24,7 @@
 
 create_composite <-
   function(data,selection, name, na.rm = T) {
-    mtcars |>
+    data |>
       dplyr::rowwise() |>
       dplyr::mutate({{name}} := mean(c({{selection}}, na.rm = T))) |>
       dplyr::ungroup()
