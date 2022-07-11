@@ -7,7 +7,7 @@ Will take as input a path to a csv file with oldname,newname syntax. Will find e
 \usage{
 recode_with_csv(
   data,
-  csvfile,
+  csvfile = ".recode",
   old_column,
   new_column = {
      {
