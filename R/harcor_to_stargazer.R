@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-harcor_to_stargazer <- function(x, out=NULL, type = 'html',rownames = F,summary = F,...){
+harcor_to_stargazer <- function(x, out=NULL, type = 'html',rownames = F,summary = F,lineadjust = 0,...){
   undo <- gsub("\\\\textasteriskcentered", "*", stargazer::stargazer(x,rownames = rownames ,summary = summary,...))
 
   undo <- stargazer::stargazer(x,rownames = rownames ,summary = summary,type = type)
@@ -37,7 +37,7 @@ harcor_to_stargazer <- function(x, out=NULL, type = 'html',rownames = F,summary 
     restar <- gsub("* *", "**", restar, fixed = TRUE)
     restar <- gsub("* ", "*", restar, fixed = TRUE)
     lineloc = length(restar)
-    lineplace = length(restar)-3
+    lineplace = length(restar)-lineadjust
     line = restar[lineloc] |> str_remove("</table>")
     restar = restar[c(1:(lineplace-1), lineloc, lineplace:lineloc)]
     restar[lineplace] = line
