@@ -16,7 +16,7 @@
 
 recode_with_csv <- function(data, csvfile=".recode", old_column, new_column={{old_column}}){
 
-  names = readr::read_csv(csvfile,col_names = F,show_col_types = FALSE)
+  names = readr::read_csv(csvfile,col_names = F,show_col_types = FALSE, col_types = "cc")
   result <- data |> dplyr::mutate({{new_column}} := {{old_column}})
   for (i in 1:nrow(names)){
     result <-  result |> dplyr::mutate({{new_column}} := stringr::str_replace_all({{new_column}}, names$X1[i], names$X2[i]))
