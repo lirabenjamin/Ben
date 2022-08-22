@@ -253,11 +253,11 @@ gt_fatable = function(x,sort = T,cut = .3,apa = T,eigenvalues = T,cor = F) {
   }
 }
 
-theme_ang = list(theme(legend.position = "bottom",
+theme_ang = theme(legend.position = "bottom",
                        panel.grid = element_blank(),
                        panel.border = element_blank(),
                        panel.background = element_blank(),
-                       axis.line = element_line(size = .25)))
+                       axis.line = element_line(size = .25))
 
 
 
