@@ -131,15 +131,17 @@ gt_apa = function(x){x %>%
 
 #Factor analysis
 fa_tibble = function(fa,sort=T){
-  if(sort){fa = psych::fa.sort(fa)}
-  loadings = fa$loadings %>% as.numeric() %>%
-    matrix(ncol = fa$factors) %>% as_tibble %>%
-    mutate(Var = fa$model %>% colnames()) %>%
-    select(Item = Var,everything())
+  if(sort){l = psych::fa.sort(fa)$loadings}
+  l = fa$loadings
+
+  loadings = data.frame(matrix(as.numeric(l), attributes(l)$dim, dimnames=attributes(l)$dimnames)) |>
+    rownames_to_column() |>
+    as_tibble() |>
+    rename(Item = rowname)
   return(loadings)
-
-
 }
+
+
 gt_fatable = function(x,sort = T,cut = .3,apa = T,eigenvalues = T,cor = F) {
   if (is_tibble(x)) {
     items = nrow(x)
